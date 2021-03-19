@@ -26,12 +26,14 @@ before_script:
   - source venv/bin/activate
 
 test:
+  when: manual
   script:
     - python setup.py test
     - pip install tox flake8  # you can also use tox
     - tox -e py36,flake8
 
 run:
+  when: manual
   script:
     - python setup.py bdist_wheel
     # an alternative approach is to install and run:
@@ -42,6 +44,7 @@ run:
       - dist/*.whl
 
 pages:
+  when: manual
   script:
     - pip install sphinx sphinx-rtd-theme
     - cd doc ; make html
