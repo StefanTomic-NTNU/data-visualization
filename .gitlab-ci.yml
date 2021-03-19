@@ -65,6 +65,6 @@ pylint:
   artifacts:
     paths:
       - ./pylint/
-    only:
+  only:
     - master
 
