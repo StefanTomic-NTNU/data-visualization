@@ -7,11 +7,11 @@ x = np.reshape(X, (2000, 3))
 x = x.T
 D = 3
 print(x)
-N = len(x) #size of all the x in csv file
-u = 1/N * np.sum(x)
+u = (1/2000) * np.sum(x)
 
-for i in range(N):
-    x[i] = x[i] - u
+for i in range(3):
+    for j in range(2000):
+        x[i][j] = x[i][j] - u
 covmatrix = np.cov(x)
 
 
