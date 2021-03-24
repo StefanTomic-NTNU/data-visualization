@@ -7,7 +7,7 @@ def main():
     """ Main function of project """
     pca = PCA()
     isomap = Isomap()
-
+    isomap.compute_geodesics()
 
 if __name__ == '__main__':
     main()
