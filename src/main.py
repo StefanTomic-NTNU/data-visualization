@@ -8,6 +8,7 @@ def main():
     pca = PCA()
     isomap = Isomap()
     isomap.compute_geodesics()
+    isomap.apply_mds()
 
 if __name__ == '__main__':
     main()
