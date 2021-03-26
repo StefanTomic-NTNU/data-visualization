@@ -67,10 +67,10 @@ class Isomap:
         print("Double centering..")
         dig_dim = squared_dig.shape[0]
         sw_dim = squared_sw.shape[0]
-        cent_mat_dig = np.identity(dig_dim) - np.full((dig_dim, dig_dim), np.mean(squared_dig))
-        cent_mat_sw = np.identity(sw_dim) - np.full((sw_dim, sw_dim), np.mean(squared_sw))
-        b_dig = ((-1)/2) * cent_mat_dig * squared_dig
-        b_sw = ((-1)/2) * cent_mat_sw * squared_sw
+        cent_mat_dig = np.subtract(np.identity(dig_dim), np.full((dig_dim, dig_dim), np.mean(squared_dig)))
+        cent_mat_sw = np.subtract(np.identity(sw_dim), np.full((sw_dim, sw_dim), np.mean(squared_sw)))
+        b_dig = np.matmul(((-1)/2) * cent_mat_dig, squared_dig)
+        b_sw = np.matmul(((-1)/2) * cent_mat_sw, squared_sw)
         print()
 
         # Eigendecomposition
@@ -86,3 +86,17 @@ class Isomap:
 
         # Mapping points
         print("Mapping points.. ")
+        y_dig = np.matmul(eig_dig[1],
+                          np.array([[eig_dig[0][0], 0],
+                                   [0, eig_dig[0][1]]]))
+        y_sw = np.matmul(eig_sw[1],
+                         np.array([[eig_sw[0][0], 0],
+                                  [0, eig_sw[0][1]]]))
+        print()
+
+        # Plotting mapped points
+        print("Plotting points.. ")
+        plot.scatter(y_dig[:, 0], y_dig[:, 1], s=10, marker=".")
+        plot.show()
+        plot.scatter(y_sw[:, 0], y_sw[:, 1], s=10, marker=".")
+        plot.show()
