@@ -1,14 +1,15 @@
 """ Contains main function of project """
-from isomap import Isomap
-from pca import PCA
+from src.isomap import Isomap
+from src.pca import PCA
 
 
 def main():
     """ Main function of project """
-    pca = PCA()
-    isomap = Isomap()
-    isomap.compute_geodesics()
-    isomap.apply_mds()
+    pca1 = PCA()
+    isomap1 = Isomap()
+    isomap1.compute_geodesics()
+    isomap1.apply_mds()
+
 
 if __name__ == '__main__':
     main()

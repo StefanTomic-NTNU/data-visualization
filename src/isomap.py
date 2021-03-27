@@ -1,5 +1,7 @@
 """ Contains Isomap class """
 
+# TODO: REMOVE SYS BEFORE DELIVERY
+import sys
 import numpy as np
 import matplotlib.pyplot as plot
 import scipy as sp
@@ -37,6 +39,12 @@ class Isomap:
         red_digs = u.reduce_matrix(dist_digs, 50)
         red_sw = u.reduce_matrix(dist_sw, 50)
 
+        # print("Printing red_sw")
+        # with np.printoptions(threshold=sys.maxsize):
+        #     print(red_sw)
+
+        # print("^red_sw")
+
         # print(red_digs)
         # print(red_sw)
         # print(red_digs.shape)
@@ -46,6 +54,12 @@ class Isomap:
         self.shortest_dig = graph_shortest_path(red_digs)
         self.shortest_sw = graph_shortest_path(red_sw)
         print("Shortest paths computed!\n ")
+
+        # with np.printoptions(threshold=sys.maxsize):
+        #     print(self.shortest_sw)
+
+        print(self.shortest_sw)
+        print("^Shortest paths (sw)")
 
         # print(self.shortest_dig)
         # print(self.shortest_sw)
