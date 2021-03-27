@@ -30,7 +30,7 @@ class Isomap:
         """
         Finds geodesics (shortest distance) between all points,
         traversing the manifold. Reduces the vectors to only include
-        the 50 smallest values.
+        the k smallest values.
         """
         # Calculating euclidean distances
         print("Calculating euclidean distances.. ")
@@ -41,32 +41,10 @@ class Isomap:
         red_digs = u.reduce_matrix(dist_digs, 50)
         red_sw = u.reduce_matrix(dist_sw, 20)
 
-        # print("Printing red_sw")
-        # with np.printoptions(threshold=sys.maxsize):
-        #     print(red_sw)
-
-        # print("^red_sw")
-
-        # print(red_digs)
-        # print(red_sw)
-        # print(red_digs.shape)
-        # print(red_sw.shape)
-
-        print("Computing shortest path.. This may take some time (about 3-5 minutes)\n")
+        # Applying dijkstra's algorithm
+        print("Computing shortest path.. This may take some time.. \n")
         self.shortest_dig = graph_shortest_path(red_digs)
         self.shortest_sw = graph_shortest_path(red_sw)
-        print("Shortest paths computed!\n ")
-
-        # with np.printoptions(threshold=sys.maxsize):
-        #     print(self.shortest_sw)
-
-        print(self.shortest_sw)
-        print("^Shortest paths (sw)")
-
-        # print(self.shortest_dig)
-        # print(self.shortest_sw)
-        # print(self.shortest_dig.shape)
-        # print(self.shortest_sw.shape)
 
     def apply_mds(self):
         """
@@ -86,28 +64,11 @@ class Isomap:
         sw_dim = squared_sw.shape[0]
         dig_id = np.identity(dig_dim)
         sw_id = np.identity(sw_dim)
-        # dig_mean = np.full((dig_dim, dig_dim), np.mean(squared_dig))
-        # sw_mean = np.full((sw_dim, sw_dim), np.mean(squared_sw))
         dig_n = np.full((dig_dim, dig_dim), 1/dig_dim)
         sw_n = np.full((sw_dim, sw_dim), 1/sw_dim)
 
-        # print("\nDIG ID: ")
-        # print(dig_id)
-        # print("SW ID:")
-        # print(sw_id)
-
-        # print("\nDIG MEAN: ")
-        # print(dig_mean)
-        # print("SW MEAN: ")
-        # print(sw_mean)
-
         cent_mat_dig = np.subtract(dig_id, dig_n)
         cent_mat_sw = np.subtract(sw_id, sw_n)
-
-        print("\nCENT DIG:")
-        print(cent_mat_dig)
-        print("CENT SW: ")
-        print(cent_mat_sw)
 
         b_dig = multi_dot([cent_mat_dig, squared_dig, cent_mat_dig])
         b_sw = multi_dot([cent_mat_sw, squared_sw, cent_mat_sw])
@@ -115,24 +76,11 @@ class Isomap:
         b_dig = b_dig * -0.5
         b_sw = b_sw * -0.5
 
-        print("\nB DIG:")
-        print(b_dig)
-        print("B SW: ")
-        print(b_sw)
-
         # Eigendecomposition
-        print("Performing eigendecomposition.. \n")
+        print("\nPerforming eigendecomposition..")
         eig_dig = eigh(b_dig, subset_by_index=[5618, 5619])
         eig_sw = eigh(b_sw, subset_by_index=[1998, 1999])
-        print("Dig Eigens: ")
-        print(eig_dig)
-        print()
-        print("SW Eigens: ")
-        print(eig_sw)
-        print()
 
-        print(eig_dig[0][0])
-        print(eig_dig[0][1])
         sqrt_dig_0 = np.sqrt(eig_dig[0][0])
         sqrt_dig_1 = np.sqrt(eig_dig[0][1])
         exp_lambda_dig = np.array([[sqrt_dig_0, 0],
