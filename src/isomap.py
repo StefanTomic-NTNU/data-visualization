@@ -38,8 +38,8 @@ class Isomap:
         dist_sw = u.calculate_euclidean_distances(self.raw_sw)
 
         # Reduce matrix to approximate distances along manifold
-        red_digs = u.reduce_matrix(dist_digs, 30)
-        red_sw = u.reduce_matrix(dist_sw, 30)
+        red_digs = u.reduce_matrix(dist_digs, 50)
+        red_sw = u.reduce_matrix(dist_sw, 20)
 
         # print("Printing red_sw")
         # with np.printoptions(threshold=sys.maxsize):
@@ -150,7 +150,9 @@ class Isomap:
 
         # Plotting mapped points
         print("\nPlotting points.. ")
+
         plot.scatter(y_dig[:, 0], y_dig[:, 1], s=10, marker=".")
         plot.show()
-        plot.scatter(y_sw[:, 0], y_sw[:, 1], s=10, marker=".")
+        plot.scatter(y_sw[:, 1], y_sw[:, 0], c=np.arange(2000), s=10, marker=".")
         plot.show()
+
