@@ -5,6 +5,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plot
 import scipy as sp
+from numpy.linalg import matrix_power
 from scipy.linalg import eigh
 from sklearn.utils.graph_shortest_path import graph_shortest_path
 
@@ -75,17 +76,45 @@ class Isomap:
         print("Squaring matrices..")
         squared_dig = np.square(self.shortest_dig)
         squared_sw = np.square(self.shortest_sw)
-        print()
+        print("SW SQUARED: ")
+        print(squared_sw)
 
         # Apply double centering
         print("Double centering..")
         dig_dim = squared_dig.shape[0]
         sw_dim = squared_sw.shape[0]
-        cent_mat_dig = np.subtract(np.identity(dig_dim), np.full((dig_dim, dig_dim), np.mean(squared_dig)))
-        cent_mat_sw = np.subtract(np.identity(sw_dim), np.full((sw_dim, sw_dim), np.mean(squared_sw)))
-        b_dig = np.matmul(((-1)/2) * cent_mat_dig, squared_dig)
-        b_sw = np.matmul(((-1)/2) * cent_mat_sw, squared_sw)
-        print()
+        dig_id = np.identity(dig_dim)
+        sw_id = np.identity(sw_dim)
+        # dig_mean = np.full((dig_dim, dig_dim), np.mean(squared_dig))
+        # sw_mean = np.full((sw_dim, sw_dim), np.mean(squared_sw))
+        dig_n = np.full((dig_dim, dig_dim), 1/dig_dim)
+        sw_n = np.full((sw_dim, sw_dim), 1/sw_dim)
+
+        # print("\nDIG ID: ")
+        # print(dig_id)
+        # print("SW ID:")
+        # print(sw_id)
+
+        # print("\nDIG MEAN: ")
+        # print(dig_mean)
+        # print("SW MEAN: ")
+        # print(sw_mean)
+
+        cent_mat_dig = np.subtract(dig_id, dig_n)
+        cent_mat_sw = np.subtract(sw_id, sw_n)
+
+        print("\nCENT DIG:")
+        print(cent_mat_dig)
+        print("CENT SW: ")
+        print(cent_mat_sw)
+
+        b_dig = 0.5 * np.matmul(cent_mat_dig, squared_dig, dtype=float)
+        b_sw = 0.5 * np.matmul(cent_mat_sw, squared_sw, dtype=float)
+
+        print("\nB DIG:")
+        print(b_dig)
+        print("B SW: ")
+        print(b_sw)
 
         # Eigendecomposition
         print("Performing eigendecomposition.. \n")
@@ -98,14 +127,22 @@ class Isomap:
         print(eig_sw)
         print()
 
+        print(eig_dig[0][0])
+        print(eig_dig[0][1])
+        sqrt_dig_0 = eig_dig[0][0]
+        sqrt_dig_1 = eig_dig[0][1]
+        exp_lambda_dig = np.array([[sqrt_dig_0, 0],
+                                   [0, sqrt_dig_1]])
+
+        sqrt_sw_0 = eig_sw[0][0]
+        sqrt_sw_1 = eig_sw[0][1]
+        exp_lambda_sw = np.array([[sqrt_sw_0, 0],
+                                  [0, sqrt_sw_1]])
+
         # Mapping points
         print("Mapping points.. ")
-        y_dig = np.matmul(eig_dig[1],
-                          np.array([[eig_dig[0][0], 0],
-                                   [0, eig_dig[0][1]]]))
-        y_sw = np.matmul(eig_sw[1],
-                         np.array([[eig_sw[0][0], 0],
-                                  [0, eig_sw[0][1]]]))
+        y_dig = np.matmul(eig_dig[1], exp_lambda_dig)
+        y_sw = np.matmul(eig_sw[1], exp_lambda_sw)
         print()
 
         # Plotting mapped points
