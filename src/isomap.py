@@ -122,8 +122,8 @@ class Isomap:
 
         # Eigendecomposition
         print("Performing eigendecomposition.. \n")
-        eig_dig = eigh(b_dig, subset_by_index=[0, 1])
-        eig_sw = eigh(b_sw, subset_by_index=[0, 1])
+        eig_dig = eigh(b_dig, subset_by_index=[5618, 5619])
+        eig_sw = eigh(b_sw, subset_by_index=[1998, 1999])
         print("Dig Eigens: ")
         print(eig_dig)
         print()
@@ -133,13 +133,13 @@ class Isomap:
 
         print(eig_dig[0][0])
         print(eig_dig[0][1])
-        sqrt_dig_0 = eig_dig[0][0]
-        sqrt_dig_1 = eig_dig[0][1]
+        sqrt_dig_0 = np.sqrt(eig_dig[0][0])
+        sqrt_dig_1 = np.sqrt(eig_dig[0][1])
         exp_lambda_dig = np.array([[sqrt_dig_0, 0],
                                    [0, sqrt_dig_1]])
 
-        sqrt_sw_0 = eig_sw[0][0]
-        sqrt_sw_1 = eig_sw[0][1]
+        sqrt_sw_0 = np.sqrt(eig_sw[0][0])
+        sqrt_sw_1 = np.sqrt(eig_sw[0][1])
         exp_lambda_sw = np.array([[sqrt_sw_0, 0],
                                   [0, sqrt_sw_1]])
 
