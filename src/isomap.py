@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plot
 import scipy as sp
 from numpy.linalg import matrix_power
+from numpy.linalg import multi_dot
 from scipy.linalg import eigh
 from sklearn.utils.graph_shortest_path import graph_shortest_path
 
@@ -37,8 +38,8 @@ class Isomap:
         dist_sw = u.calculate_euclidean_distances(self.raw_sw)
 
         # Reduce matrix to approximate distances along manifold
-        red_digs = u.reduce_matrix(dist_digs, 50)
-        red_sw = u.reduce_matrix(dist_sw, 50)
+        red_digs = u.reduce_matrix(dist_digs, 30)
+        red_sw = u.reduce_matrix(dist_sw, 30)
 
         # print("Printing red_sw")
         # with np.printoptions(threshold=sys.maxsize):
@@ -108,8 +109,11 @@ class Isomap:
         print("CENT SW: ")
         print(cent_mat_sw)
 
-        b_dig = 0.5 * np.matmul(cent_mat_dig, squared_dig, dtype=float)
-        b_sw = 0.5 * np.matmul(cent_mat_sw, squared_sw, dtype=float)
+        b_dig = multi_dot([cent_mat_dig, squared_dig, cent_mat_dig])
+        b_sw = multi_dot([cent_mat_sw, squared_sw, cent_mat_sw])
+
+        b_dig = b_dig * -0.5
+        b_sw = b_sw * -0.5
 
         print("\nB DIG:")
         print(b_dig)
@@ -140,13 +144,12 @@ class Isomap:
                                   [0, sqrt_sw_1]])
 
         # Mapping points
-        print("Mapping points.. ")
-        y_dig = np.matmul(eig_dig[1], exp_lambda_dig)
-        y_sw = np.matmul(eig_sw[1], exp_lambda_sw)
-        print()
+        print("\nMapping points.. ")
+        y_dig = eig_dig[1].dot(exp_lambda_dig)
+        y_sw = eig_sw[1].dot(exp_lambda_sw)
 
         # Plotting mapped points
-        print("Plotting points.. ")
+        print("\nPlotting points.. ")
         plot.scatter(y_dig[:, 0], y_dig[:, 1], s=10, marker=".")
         plot.show()
         plot.scatter(y_sw[:, 0], y_sw[:, 1], s=10, marker=".")
