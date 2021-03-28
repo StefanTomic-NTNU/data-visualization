@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy as sp
 
 class PCA:
     """ hello this is class docstring"""
@@ -46,7 +45,8 @@ class PCA:
         plt.show()
 
 def main():
-    filename = "digits.csv"
+    """main function"""
+    filename = "swiss_data.csv"
     pca = PCA(filename)
     pca.fit()
     pca.transform()
