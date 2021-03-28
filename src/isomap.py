@@ -1,7 +1,7 @@
 """ Contains Isomap class """
 
 import numpy as np
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
 from numpy.linalg import multi_dot
 from scipy.linalg import eigh
 from sklearn.utils.graph_shortest_path import graph_shortest_path
@@ -62,19 +62,18 @@ class Isomap:
 
         # Mapping points
         print("Mapping points to 2D.. ")
-        y_dig = eigens[1].dot(squared_lambda)
-        y_sw = eigens[1].dot(squared_lambda)
+        mapped_matrix = eigens[1].dot(squared_lambda)
 
         # Plotting mapped points
         print("Plotting points.. ")
         if self.filename == "swiss_data.csv":
-            plot.scatter(y_sw[:, 1], y_sw[:, 0],
-                         c=np.arange(self.nr_data_points), cmap='gist_rainbow', s=20, marker=".")
+            plt.scatter(mapped_matrix[:, 1], mapped_matrix[:, 0],
+                        c=np.arange(self.nr_data_points), cmap='gist_rainbow', s=20, marker=".")
         elif self.filename == "digits.csv":
             labels = u.load_csv_to_array("digits_label.csv").tolist()
-            plot.scatter(y_dig[:, 0], y_dig[:, 1], c=labels, cmap='tab10', s=10, marker=".")
-            cbar = plot.colorbar()
+            plt.scatter(mapped_matrix[:, 0], mapped_matrix[:, 1], c=labels, cmap='tab10', s=10, marker=".")
+            cbar = plt.colorbar()
             cbar.set_label("Number labels")
         else:
-            plot.scatter(y_dig[:, 0], y_dig[:, 1], s=10, marker=".")
-        plot.show()
+            plt.scatter(y_dig[:, 0], y_dig[:, 1], s=10, marker=".")
+        plt.show()
