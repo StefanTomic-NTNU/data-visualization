@@ -43,12 +43,24 @@ class TSNE:
         stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
 
         # Initialize variables
-        gain = np.ones((1, self.nr_data_points))        # g in assignment
-        change = np.zeros((1, self.nr_data_points))     # delta in assignment
+        gain = np.ones((2, self.nr_data_points))        # g in assignment
+        change = np.zeros((2, self.nr_data_points))     # delta in assignment
 
         for i in range(1, max_iteration):
+            print("Iteration " + str(i))
             # Calculate the gradient over each y_i
             # Gradient is top-down delta in assignment
             gradient = 4 * ((stand_hd_similarity_matrix.sum(axis=0) - stand_two_d_similarity_matrix.sum(axis=0)) *
-                               two_d_similarity_matrix.sum(axis=0) *
-                              (sampled_two_d_points * self.nr_data_points - np.sum(sampled_two_d_points, axis=0)))
+                            two_d_similarity_matrix.sum(axis=0) *
+                            (sampled_two_d_points * self.nr_data_points - np.sum(sampled_two_d_points, axis=0)))
+
+            # Update gain
+            gain[np.sign(gradient) != np.sign(change)] += 0.2
+            gain[np.sign(gradient) == np.sign(change)] *= 0.8
+            gain[gain < 0.01] = 0.01
+
+            # Update change
+            change = alpha * change - epsilon * gain * gradient
+
+            # Update 2D points
+            sampled_two_d_points += change
