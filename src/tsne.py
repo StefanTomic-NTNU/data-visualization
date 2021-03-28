@@ -33,21 +33,27 @@ class TSNE:
         # Sample 2D data points from normal distribution
         sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
 
-        # Find similarity matrix of 2D points
-        sampled_two_d_points2 = np.swapaxes(sampled_two_d_points, 0, 1)
-        two_d_similarity_matrix = u.calculate_euclidean_distances(sampled_two_d_points2)
-        two_d_similarity_matrix = 1 / (1 + np.square(two_d_similarity_matrix))  # q as described in assignment
-
-        # divide each point by sum of values
-        stand_two_d_similarity_matrix = two_d_similarity_matrix / np.sum(two_d_similarity_matrix)   # Q
-        stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
-
         # Initialize variables
         gain = np.ones((2, self.nr_data_points))        # g in assignment
         change = np.zeros((2, self.nr_data_points))     # delta in assignment
+        dynamic_alpha = 0.5
 
         for i in range(1, max_iteration):
             print("Iteration " + str(i))
+
+            if i == 250:
+                dynamic_alpha = alpha   # Optimisation trick
+
+            # Find similarity matrix of 2D points
+            two_d_similarity_matrix = u.calculate_euclidean_distances(np.swapaxes(sampled_two_d_points, 0, 1))
+            two_d_similarity_matrix = 1 / (1 + np.square(two_d_similarity_matrix))  # q as described in assignment
+
+            # divide each point by sum of values
+            stand_two_d_similarity_matrix = two_d_similarity_matrix / np.sum(two_d_similarity_matrix)  # Q
+            stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
+            if i < 100:
+                stand_hd_similarity_matrix *= 4     # Optimisation trick
+
             # Calculate the gradient over each y_i
             # Gradient is top-down delta in assignment
             gradient = 4 * ((stand_hd_similarity_matrix.sum(axis=0) - stand_two_d_similarity_matrix.sum(axis=0)) *
@@ -60,7 +66,7 @@ class TSNE:
             gain[gain < 0.01] = 0.01
 
             # Update change
-            change = alpha * change - epsilon * gain * gradient
+            change = dynamic_alpha * change - epsilon * gain * gradient
 
             # Update 2D points
             sampled_two_d_points += change
