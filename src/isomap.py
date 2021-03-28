@@ -75,5 +75,5 @@ class Isomap:
             cbar = plt.colorbar()
             cbar.set_label("Number labels")
         else:
-            plt.scatter(y_dig[:, 0], y_dig[:, 1], s=10, marker=".")
+            plt.scatter(mapped_matrix[:, 0], mapped_matrix[:, 1], s=10, marker=".")
         plt.show()

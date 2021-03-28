@@ -1,7 +1,7 @@
 """ File containing TSNE class """
 import numpy as np
 from numpy.random import normal
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 from src import util as u
 
@@ -9,6 +9,7 @@ from src import util as u
 class TSNE:
     """ Class for performing Student t-Distributed Stochastic Neighbor Embedding """
     def __init__(self, filename):
+        self.filename = filename
         self.raw = u.load_csv_to_array(filename)
         self.nr_data_points = self.raw.shape[0]
         self.hd_similarity_matrix = None    # p as described in assignment
@@ -25,11 +26,15 @@ class TSNE:
         """
         distance_matrix = u.calculate_euclidean_distances(self.raw)
         self.hd_similarity_matrix = u.compute_pairwise_similarities(distance_matrix, k)
-        # print(self.hd_similarity_matrix)
-        # print(self.hd_similarity_matrix.shape)
 
     def map_data_points(self, max_iteration, alpha, epsilon):
         """ Maps data points. """
+
+        # TODO: FIX OVERFLOW ERROR. ARISES BECAUSE 2D POINTS GO TOWARDS 0
+
+        # divide each point by sum of values
+        stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
+
         # Sample 2D data points from normal distribution
         sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
 
@@ -50,7 +55,7 @@ class TSNE:
 
             # divide each point by sum of values
             stand_two_d_similarity_matrix = two_d_similarity_matrix / np.sum(two_d_similarity_matrix)  # Q
-            stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
+
             if i < 100:
                 stand_hd_similarity_matrix *= 4     # Optimisation trick
 
@@ -70,3 +75,18 @@ class TSNE:
 
             # Update 2D points
             sampled_two_d_points += change
+
+            print(sampled_two_d_points)
+
+        # Plotting mapped points
+        plt.scatter(sampled_two_d_points[:, 0], sampled_two_d_points[:, 1], s=10, marker=".")
+        plt.show()
+        if self.filename == "digits.csv":
+            labels = u.load_csv_to_array("digits_label.csv").tolist()
+            points_to_plot = np.swapaxes(sampled_two_d_points, 0, 1)
+            plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1], c=labels, cmap='tab10', s=10, marker=".")
+            cbar = plt.colorbar()
+            cbar.set_label("Number labels")
+        else:
+            plt.scatter(sampled_two_d_points[:, 0], sampled_two_d_points[:, 1], s=10, marker=".")
+        plt.show()
