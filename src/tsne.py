@@ -36,6 +36,7 @@ class TSNE:
         stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
 
         # Sample 2D data points from normal distribution
+        # TODO: This should be done by seed when algorithm is somewhat correct.
         sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
 
         # Initialize variables
@@ -61,13 +62,17 @@ class TSNE:
 
             # Calculate the gradient over each y_i
             # Gradient is top-down delta in assignment
+            # TODO: This is an attempt at implementing 6.2.2a, but I think it is incorrect.
+            #  It is done differently in slides.
             gradient = 4 * ((stand_hd_similarity_matrix.sum(axis=0) - stand_two_d_similarity_matrix.sum(axis=0)) *
                             two_d_similarity_matrix.sum(axis=0) *
                             (sampled_two_d_points * self.nr_data_points - np.sum(sampled_two_d_points, axis=0)))
 
             # Update gain
-            gain[np.sign(gradient) != np.sign(change)] += 0.2
-            gain[np.sign(gradient) == np.sign(change)] *= 0.8
+            unequal = gain[np.sign(gradient) != np.sign(change)]
+            equal = gain[np.sign(gradient) == np.sign(change)]
+            unequal += 0.2
+            equal *= 0.8
             gain[gain < 0.01] = 0.01
 
             # Update change
