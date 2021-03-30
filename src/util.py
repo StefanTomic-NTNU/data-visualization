@@ -2,12 +2,12 @@
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 
-CSV_RELATIVE_PATH = "../csv/"
+RELATIVE_PATH_TO_CSV = "../csv/"
 
 
 def load_csv_to_array(filepath):
     """ Loads csv to numpy matrix """
-    return np.genfromtxt(CSV_RELATIVE_PATH + filepath, delimiter=',')
+    return np.genfromtxt(RELATIVE_PATH_TO_CSV + filepath, delimiter=',')
 
 
 def calculate_euclidean_distances(matrix):

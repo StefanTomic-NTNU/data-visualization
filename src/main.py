@@ -7,7 +7,9 @@ from src.pca import PCA
 def main():
     """ Main function of project """
     # PCA
-    # pca_digits = PCA()
+    # pca = PCA("swiss_data.csv")
+    # pca.fit()
+    # pca.transform()
 
     # Isomap
     # isomap_digits = Isomap("digits.csv")
