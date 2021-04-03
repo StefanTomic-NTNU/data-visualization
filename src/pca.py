@@ -26,7 +26,7 @@ class PCA:
             self.x = np.reshape(raw_data, (self.col, self.dimensions))
             self.fit = 0    # F in the assignment
 
-    def fit(self):
+    def fit_data(self):
         """ Creates fit using PCA and assigns it to self.F """
         self.x = self.x - np.mean(self.x, axis=0)
         covmatrix = np.cov(self.x.T)

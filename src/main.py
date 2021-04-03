@@ -7,9 +7,9 @@ from src.pca import PCA
 def main():
     """ Main function of project """
     # PCA
-    # pca = PCA("swiss_data.csv")
-    # pca.fit()
-    # pca.transform()
+    # pca_swiss = PCA("swiss_data.csv")
+    # pca_swiss.fit_data()
+    # pca_swiss.transform()
 
     # Isomap
     # isomap_digits = Isomap("digits.csv")
@@ -21,7 +21,7 @@ def main():
 
     # t-SNE
     tsne_digits = TSNE("digits.csv")
-    tsne_digits.compute_pairwise_similarities(35)
+    tsne_digits.compute_pairwise_similarities(45)   # Value of 45 seems to be best fit
     # Values given in assignment are:
     # max_iteration:    1000
     # alpha:            0.8

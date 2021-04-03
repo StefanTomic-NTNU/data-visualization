@@ -92,12 +92,10 @@ class TSNE:
             print(sampled_two_d_points)
 
         # Plotting mapped points
-        plt.scatter(sampled_two_d_points[:, 0], sampled_two_d_points[:, 1], s=10, marker=".")
-        plt.show()
         if self.filename == "digits.csv":
             labels = u.load_csv_to_array("digits_label.csv").tolist()
             points_to_plot = np.swapaxes(sampled_two_d_points, 0, 1)
-            plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1], c=labels, cmap='tab10', s=10, marker=".")
+            plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1], c=labels, cmap='tab10', s=8, marker=".")
             cbar = plt.colorbar()
             cbar.set_label("Number labels")
         else:
