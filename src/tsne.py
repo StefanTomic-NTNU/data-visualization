@@ -60,19 +60,28 @@ class TSNE:
             if i < 100:
                 stand_hd_similarity_matrix *= 4     # Optimisation trick
 
+            # print("Before")
+            # print(sampled_two_d_points)
+
             # Calculate the gradient over each y_i
             # Gradient is top-down delta in assignment
             # TODO: This is an attempt at implementing 6.2.2a, but I think it is incorrect.
             #  It is done differently in slides.
-            gradient = 4 * ((stand_hd_similarity_matrix.sum(axis=0) - stand_two_d_similarity_matrix.sum(axis=0)) *
-                            two_d_similarity_matrix.sum(axis=0) *
-                            (sampled_two_d_points * self.nr_data_points - np.sum(sampled_two_d_points, axis=0)))
+            # gradient = 4 * ((stand_hd_similarity_matrix.sum(axis=0) - stand_two_d_similarity_matrix.sum(axis=0)) *
+            #                 two_d_similarity_matrix.sum(axis=0) *
+            #                 (sampled_two_d_points * self.nr_data_points - np.sum(sampled_two_d_points, axis=0)))
+
+            Y = np.swapaxes(sampled_two_d_points, 0, 1)
+            G = (stand_hd_similarity_matrix - stand_two_d_similarity_matrix) * two_d_similarity_matrix
+            S = np.diag(np.sum(G, axis=1))
+            gradient = 4 * (S - G) @ Y
+
+            # print(gradient.shape)
+            gradient = np.swapaxes(gradient, 0, 1)
 
             # Update gain
-            unequal = gain[np.sign(gradient) != np.sign(change)]
-            equal = gain[np.sign(gradient) == np.sign(change)]
-            unequal += 0.2
-            equal *= 0.8
+            gain[np.sign(gradient) != np.sign(change)] += 0.2
+            gain[np.sign(gradient) == np.sign(change)] *= 0.8
             gain[gain < 0.01] = 0.01
 
             # Update change

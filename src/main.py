@@ -26,7 +26,7 @@ def main():
     # max_iteration:    1000
     # alpha:            0.8
     # epsilon:          500
-    tsne_digits.map_data_points(50, 0.8, 500)
+    tsne_digits.map_data_points(500, 0.8, 500)
 
 
 if __name__ == '__main__':
