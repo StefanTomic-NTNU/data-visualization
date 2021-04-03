@@ -34,6 +34,7 @@ class TSNE:
 
         # divide each point by sum of values
         stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
+        dynamic_stand_hd_similarity_matrix = 4 * stand_hd_similarity_matrix
 
         # Sample 2D data points from normal distribution
         # TODO: This should be done by seed when algorithm is somewhat correct.
@@ -57,8 +58,8 @@ class TSNE:
             # divide each point by sum of values
             stand_two_d_similarity_matrix = two_d_similarity_matrix / np.sum(two_d_similarity_matrix)  # Q
 
-            if i < 100:
-                stand_hd_similarity_matrix *= 4     # Optimisation trick
+            if i == 100:
+                dynamic_stand_hd_similarity_matrix = stand_hd_similarity_matrix     # Optimisation trick
 
             # print("Before")
             # print(sampled_two_d_points)
@@ -72,7 +73,7 @@ class TSNE:
             #                 (sampled_two_d_points * self.nr_data_points - np.sum(sampled_two_d_points, axis=0)))
 
             Y = np.swapaxes(sampled_two_d_points, 0, 1)
-            G = (stand_hd_similarity_matrix - stand_two_d_similarity_matrix) * two_d_similarity_matrix
+            G = (dynamic_stand_hd_similarity_matrix - stand_two_d_similarity_matrix) * two_d_similarity_matrix
             S = np.diag(np.sum(G, axis=1))
             gradient = 4 * (S - G) @ Y
 

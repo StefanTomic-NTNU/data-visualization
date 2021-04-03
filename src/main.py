@@ -21,12 +21,12 @@ def main():
 
     # t-SNE
     tsne_digits = TSNE("digits.csv")
-    tsne_digits.compute_pairwise_similarities(40)
+    tsne_digits.compute_pairwise_similarities(35)
     # Values given in assignment are:
     # max_iteration:    1000
     # alpha:            0.8
     # epsilon:          500
-    tsne_digits.map_data_points(500, 0.8, 500)
+    tsne_digits.map_data_points(1000, 0.8, 500)
 
 
 if __name__ == '__main__':
