@@ -30,8 +30,6 @@ class TSNE:
     def map_data_points(self, max_iteration, alpha, epsilon):
         """ Maps data points. """
 
-        # TODO: FIX OVERFLOW ERROR. ARISES BECAUSE 2D POINTS GO TOWARDS 0
-
         # divide each point by sum of values
         stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
         dynamic_stand_hd_similarity_matrix = 4 * stand_hd_similarity_matrix
