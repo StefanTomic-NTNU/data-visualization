@@ -17,7 +17,7 @@ class PCA:
             self.col = 5620
             self.dimensions = 64
             self.choice = 1
-            self.labels = np.genfromtxt('./csv/digits_label.csv', delimiter=',').tolist()
+            self.labels = np.genfromtxt('../csv/digits_label.csv', delimiter=',').tolist()
 
         if self.col == 0 and self.dimensions == 0:
             print("wrong filename")

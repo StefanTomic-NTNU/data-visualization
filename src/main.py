@@ -7,19 +7,25 @@ from src.pca import PCA
 def main():
     """ Main function of project """
     # PCA
-    # pca_swiss = PCA("swiss_data.csv")
-    # pca_swiss.fit_data()
-    # pca_swiss.transform()
+    print("PCA")
+    pca_swiss = PCA("swiss_data.csv")
+    pca_swiss.fit_data()
+    pca_swiss.transform()
+    pca_digits = PCA("digits.csv")
+    pca_digits.fit_data()
+    pca_digits.transform()
 
     # Isomap
-    # isomap_digits = Isomap("digits.csv")
-    # isomap_swiss = Isomap("swiss_data.csv")
-    # isomap_digits.compute_geodesics(35)     # Value of 30-40 seems to be best fit
-    # isomap_swiss.compute_geodesics(25)      # Value of 20-30 seems to be best fit
-    # isomap_digits.apply_mds()
-    # isomap_swiss.apply_mds()
+    print("Isomap")
+    isomap_swiss = Isomap("swiss_data.csv")
+    isomap_digits = Isomap("digits.csv")
+    isomap_swiss.compute_geodesics(25)      # Value of 20-30 seems to be best fit
+    isomap_digits.compute_geodesics(35)     # Value of 30-40 seems to be best fit
+    isomap_swiss.apply_mds()
+    isomap_digits.apply_mds()
 
     # t-SNE
+    print("t-SNE")
     tsne_digits = TSNE("digits.csv")
     tsne_digits.compute_pairwise_similarities(43)   # Value of 45 seems to be best fit
     # Values given in assignment are:
