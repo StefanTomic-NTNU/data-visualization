@@ -38,8 +38,8 @@ class TSNE:
         dynamic_stand_hd_similarity_matrix = 4 * stand_hd_similarity_matrix
 
         # Sample 2D data points from normal distribution
-        # sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
-        # u.save_array_to_csv(sampled_two_d_points, "sampled_2d_points")
+        sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
+        u.save_array_to_csv(sampled_two_d_points, "sampled_2d_points.csv")
 
         # Or load previously sampled 2D points for consistency
         sampled_two_d_points = u.load_csv_to_array("sampled_2d_points.csv")
@@ -96,4 +96,3 @@ class TSNE:
         else:
             plt.scatter(sampled_two_d_points[:, 0], sampled_two_d_points[:, 1], s=10, marker=".")
         plt.show()
-        plt.savefig(u.RELATIVE_PATH_TO_PLOTS + "t_sne1.png")

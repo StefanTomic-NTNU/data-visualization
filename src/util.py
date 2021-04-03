@@ -13,7 +13,7 @@ def load_csv_to_array(filepath):
 
 def save_array_to_csv(array, filepath):
     """ Saves array as csv file """
-    return np.savetxt(RELATIVE_PATH_TO_CSV + filepath, array, delimiter=",\n")
+    return np.savetxt(RELATIVE_PATH_TO_CSV + filepath, array, delimiter=',')
 
 
 def calculate_euclidean_distances(matrix):
