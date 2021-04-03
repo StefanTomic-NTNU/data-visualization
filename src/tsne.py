@@ -28,13 +28,15 @@ class TSNE:
         self.hd_similarity_matrix = u.reduce_matrix(self.hd_similarity_matrix, k)
 
         self.hd_similarity_matrix = \
-            (self.hd_similarity_matrix + np.swapaxes(self.hd_similarity_matrix, 0, 1) > 0).astype(float)
+            (self.hd_similarity_matrix + np.swapaxes(self.hd_similarity_matrix, 0, 1) > 0)\
+                .astype(float)
 
     def map_data_points(self, max_iteration, alpha, epsilon):
         """ Maps data points. """
 
         # divide each point by sum of values
-        stand_hd_similarity_matrix = self.hd_similarity_matrix / np.sum(self.hd_similarity_matrix)  # P
+        stand_hd_similarity_matrix = self.hd_similarity_matrix / \
+                                     np.sum(self.hd_similarity_matrix)  # P
         dynamic_stand_hd_similarity_matrix = 4 * stand_hd_similarity_matrix
 
         # Sample 2D data points from normal distribution
@@ -56,19 +58,24 @@ class TSNE:
                 dynamic_alpha = alpha   # Optimisation trick
 
             # Find similarity matrix of 2D points
-            two_d_similarity_matrix = u.calculate_euclidean_distances(np.swapaxes(sampled_two_d_points, 0, 1))
-            two_d_similarity_matrix = 1 / (1 + np.square(two_d_similarity_matrix))  # q as described in assignment
+            two_d_similarity_matrix = u.calculate_euclidean_distances(
+                np.swapaxes(sampled_two_d_points, 0, 1))
+            two_d_similarity_matrix = 1 / (
+                    1 + np.square(two_d_similarity_matrix))  # q as described in assignment
 
             # divide each point by sum of values
-            stand_two_d_similarity_matrix = two_d_similarity_matrix / np.sum(two_d_similarity_matrix)  # Q
+            stand_two_d_similarity_matrix = two_d_similarity_matrix / \
+                                            np.sum(two_d_similarity_matrix)  # Q
 
             if i == 100:
-                dynamic_stand_hd_similarity_matrix = stand_hd_similarity_matrix     # Optimisation trick
+                dynamic_stand_hd_similarity_matrix = \
+                    stand_hd_similarity_matrix     # Optimisation trick
 
-            Y = np.swapaxes(sampled_two_d_points, 0, 1)
-            G = (dynamic_stand_hd_similarity_matrix - stand_two_d_similarity_matrix) * two_d_similarity_matrix
-            S = np.diag(np.sum(G, axis=1))
-            gradient = 4 * (S - G) @ Y
+            capital_y = np.swapaxes(sampled_two_d_points, 0, 1)
+            capital_g = (dynamic_stand_hd_similarity_matrix -
+                 stand_two_d_similarity_matrix) * two_d_similarity_matrix
+            capital_s = np.diag(np.sum(capital_g, axis=1))
+            gradient = 4 * (capital_s - capital_g) @ capital_y
 
             # print(gradient.shape)
             gradient = np.swapaxes(gradient, 0, 1)
@@ -90,9 +97,11 @@ class TSNE:
         if self.filename == "digits.csv":
             labels = u.load_csv_to_array("digits_label.csv").tolist()
             points_to_plot = np.swapaxes(sampled_two_d_points, 0, 1)
-            plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1], c=labels, cmap='tab10', s=10, marker=".")
+            plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1],
+                        c=labels, cmap='tab10', s=10, marker=".")
             cbar = plt.colorbar()
             cbar.set_label("Number labels")
         else:
-            plt.scatter(sampled_two_d_points[:, 0], sampled_two_d_points[:, 1], s=10, marker=".")
+            plt.scatter(sampled_two_d_points[:, 0], sampled_two_d_points[:, 1],
+                        s=10, marker=".")
         plt.show()

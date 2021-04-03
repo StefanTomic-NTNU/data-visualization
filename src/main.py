@@ -1,7 +1,7 @@
 """ Contains main function of project """
 from src.isomap import Isomap
-from tsne import TSNE
 from src.pca import PCA
+from tsne import TSNE
 
 
 def main():

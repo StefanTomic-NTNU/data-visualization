@@ -48,7 +48,8 @@ class Isomap:
         # Apply double centering
         print("Double centering.. ")
         centering_matrix = np.subtract(np.identity(self.nr_data_points),
-                                       np.full((self.nr_data_points, self.nr_data_points), 1/self.nr_data_points))
+                                       np.full((self.nr_data_points, self.nr_data_points),
+                                               1/self.nr_data_points))
 
         centered_matrix = multi_dot([centering_matrix, squared_geodesics, centering_matrix]) * -0.5
 
@@ -71,9 +72,11 @@ class Isomap:
                         c=np.arange(self.nr_data_points), cmap='gist_rainbow', s=20, marker=".")
         elif self.filename == "digits.csv":
             labels = u.load_csv_to_array("digits_label.csv").tolist()
-            plt.scatter(mapped_matrix[:, 0], mapped_matrix[:, 1], c=labels, cmap='tab10', s=10, marker=".")
+            plt.scatter(mapped_matrix[:, 0], mapped_matrix[:, 1],
+                        c=labels, cmap='tab10', s=10, marker=".")
             cbar = plt.colorbar()
             cbar.set_label("Number labels")
         else:
-            plt.scatter(mapped_matrix[:, 0], mapped_matrix[:, 1], s=10, marker=".")
+            plt.scatter(mapped_matrix[:, 0], mapped_matrix[:, 1],
+                        s=10, marker=".")
         plt.show()
