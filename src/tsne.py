@@ -3,14 +3,14 @@ import numpy as np
 from numpy.random import normal
 import matplotlib.pyplot as plt
 
-from src import util as u
+from src import util
 
 
 class TSNE:
     """ Class for performing Student t-Distributed Stochastic Neighbor Embedding """
     def __init__(self, filename):
         self.filename = filename
-        self.raw = u.load_csv_to_array(filename)
+        self.raw = util.load_csv_to_array(filename)
         self.nr_data_points = self.raw.shape[0]
         self.hd_similarity_matrix = None    # p as described in assignment
 
@@ -24,8 +24,8 @@ class TSNE:
 
         Sets the hd_similarity_matrix of self to be the resulting matrix.
         """
-        self.hd_similarity_matrix = u.calculate_euclidean_distances(self.raw)
-        self.hd_similarity_matrix = u.reduce_matrix(self.hd_similarity_matrix, k)
+        self.hd_similarity_matrix = util.calculate_euclidean_distances(self.raw)
+        self.hd_similarity_matrix = util.reduce_matrix(self.hd_similarity_matrix, k)
 
         self.hd_similarity_matrix = \
             (self.hd_similarity_matrix + np.swapaxes(self.hd_similarity_matrix, 0, 1) > 0)\
@@ -41,10 +41,10 @@ class TSNE:
 
         # Sample 2D data points from normal distribution
         sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
-        u.save_array_to_csv(sampled_two_d_points, "sampled_2d_points.csv")
+        util.save_array_to_csv(sampled_two_d_points, "sampled_2d_points.csv")
 
         # Or load previously sampled 2D points for consistency
-        sampled_two_d_points = u.load_csv_to_array("sampled_2d_points.csv")
+        sampled_two_d_points = util.load_csv_to_array("sampled_2d_points.csv")
 
         # Initialize variables
         gain = np.ones((2, self.nr_data_points))        # g in assignment
@@ -58,7 +58,7 @@ class TSNE:
                 dynamic_alpha = alpha   # Optimisation trick
 
             # Find similarity matrix of 2D points
-            two_d_similarity_matrix = u.calculate_euclidean_distances(
+            two_d_similarity_matrix = util.calculate_euclidean_distances(
                 np.swapaxes(sampled_two_d_points, 0, 1))
             two_d_similarity_matrix = 1 / (
                     1 + np.square(two_d_similarity_matrix))  # q as described in assignment
@@ -95,7 +95,7 @@ class TSNE:
 
         # Plotting mapped points
         if self.filename == "digits.csv":
-            labels = u.load_csv_to_array("digits_label.csv").tolist()
+            labels = util.load_csv_to_array("digits_label.csv").tolist()
             points_to_plot = np.swapaxes(sampled_two_d_points, 0, 1)
             plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1],
                         c=labels, cmap='tab10', s=10, marker=".")

@@ -6,7 +6,7 @@ from numpy.linalg import multi_dot
 from scipy.linalg import eigh
 from sklearn.utils.graph_shortest_path import graph_shortest_path
 
-from src import util as u
+from src import util
 
 
 class Isomap:
@@ -14,7 +14,7 @@ class Isomap:
     def __init__(self, filename):
         """ Loads data from csv file to array """
         self.filename = filename
-        self.raw = u.load_csv_to_array(filename)
+        self.raw = util.load_csv_to_array(filename)
         self.nr_data_points = self.raw.shape[0]
         self.geodesics = None
 
@@ -27,10 +27,10 @@ class Isomap:
         """
         # Calculating euclidean distances
         print("\nCalculating euclidean distances.. ")
-        distance_matrix = u.calculate_euclidean_distances(self.raw)
+        distance_matrix = util.calculate_euclidean_distances(self.raw)
 
         # Reduce matrix to approximate distances along manifold
-        reduced_distance_matrix = u.reduce_matrix(distance_matrix, k)
+        reduced_distance_matrix = util.reduce_matrix(distance_matrix, k)
 
         # Applying dijkstra's algorithm
         print("Computing shortest path.. ")
@@ -71,7 +71,7 @@ class Isomap:
             plt.scatter(mapped_matrix[:, 1], mapped_matrix[:, 0],
                         c=np.arange(self.nr_data_points), cmap='gist_rainbow', s=20, marker=".")
         elif self.filename == "digits.csv":
-            labels = u.load_csv_to_array("digits_label.csv").tolist()
+            labels = util.load_csv_to_array("digits_label.csv").tolist()
             plt.scatter(mapped_matrix[:, 0], mapped_matrix[:, 1],
                         c=labels, cmap='tab10', s=10, marker=".")
             cbar = plt.colorbar()
