@@ -21,7 +21,7 @@ def main():
 
     # t-SNE
     tsne_digits = TSNE("digits.csv")
-    tsne_digits.compute_pairwise_similarities(45)   # Value of 45 seems to be best fit
+    tsne_digits.compute_pairwise_similarities(43)   # Value of 45 seems to be best fit
     # Values given in assignment are:
     # max_iteration:    1000
     # alpha:            0.8

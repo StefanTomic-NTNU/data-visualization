@@ -24,9 +24,6 @@ class TSNE:
 
         Sets the hd_similarity_matrix of self to be the resulting matrix.
         """
-        # distance_matrix = u.calculate_euclidean_distances(self.raw)
-        # self.hd_similarity_matrix = u.compute_pairwise_similarities(distance_matrix, k)
-
         self.hd_similarity_matrix = u.calculate_euclidean_distances(self.raw)
         self.hd_similarity_matrix = u.reduce_matrix(self.hd_similarity_matrix, k)
 
@@ -41,8 +38,11 @@ class TSNE:
         dynamic_stand_hd_similarity_matrix = 4 * stand_hd_similarity_matrix
 
         # Sample 2D data points from normal distribution
-        # TODO: This should be done by seed when algorithm is somewhat correct.
-        sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
+        # sampled_two_d_points = normal(0, 10e-4, (2, self.nr_data_points))
+        # u.save_array_to_csv(sampled_two_d_points, "sampled_2d_points")
+
+        # Or load previously sampled 2D points for consistency
+        sampled_two_d_points = u.load_csv_to_array("sampled_2d_points")
 
         # Initialize variables
         gain = np.ones((2, self.nr_data_points))        # g in assignment
@@ -64,17 +64,6 @@ class TSNE:
 
             if i == 100:
                 dynamic_stand_hd_similarity_matrix = stand_hd_similarity_matrix     # Optimisation trick
-
-            # print("Before")
-            # print(sampled_two_d_points)
-
-            # Calculate the gradient over each y_i
-            # Gradient is top-down delta in assignment
-            # TODO: This is an attempt at implementing 6.2.2a, but I think it is incorrect.
-            #  It is done differently in slides.
-            # gradient = 4 * ((stand_hd_similarity_matrix.sum(axis=0) - stand_two_d_similarity_matrix.sum(axis=0)) *
-            #                 two_d_similarity_matrix.sum(axis=0) *
-            #                 (sampled_two_d_points * self.nr_data_points - np.sum(sampled_two_d_points, axis=0)))
 
             Y = np.swapaxes(sampled_two_d_points, 0, 1)
             G = (dynamic_stand_hd_similarity_matrix - stand_two_d_similarity_matrix) * two_d_similarity_matrix
@@ -101,9 +90,10 @@ class TSNE:
         if self.filename == "digits.csv":
             labels = u.load_csv_to_array("digits_label.csv").tolist()
             points_to_plot = np.swapaxes(sampled_two_d_points, 0, 1)
-            plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1], c=labels, cmap='tab10', s=8, marker=".")
+            plt.scatter(points_to_plot[:, 0], points_to_plot[:, 1], c=labels, cmap='tab10', s=10, marker=".")
             cbar = plt.colorbar()
             cbar.set_label("Number labels")
         else:
             plt.scatter(sampled_two_d_points[:, 0], sampled_two_d_points[:, 1], s=10, marker=".")
         plt.show()
+        plt.savefig(u.RELATIVE_PATH_TO_PLOTS + "t_sne1.png")

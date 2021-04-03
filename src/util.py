@@ -3,11 +3,17 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 
 RELATIVE_PATH_TO_CSV = "../csv/"
+RELATIVE_PATH_TO_PLOTS = "../plots/"
 
 
 def load_csv_to_array(filepath):
-    """ Loads csv to numpy matrix """
+    """ Loads csv to numpy array """
     return np.genfromtxt(RELATIVE_PATH_TO_CSV + filepath, delimiter=',')
+
+
+def save_array_to_csv(array, filepath):
+    """ Saves array as csv file """
+    return np.savetxt(RELATIVE_PATH_TO_CSV + filepath, array, delimiter=",\n")
 
 
 def calculate_euclidean_distances(matrix):
@@ -22,14 +28,4 @@ def reduce_matrix(matrix, k):
     for i in range(0, matrix.shape[0]):
         zero_matrix[i, indexes[i]] = matrix[i, indexes[i]]
 
-    return zero_matrix
-
-
-def compute_pairwise_similarities(matrix, k):
-    """ Sets k closest points to 1, rest to 0 """
-    indexes = np.argpartition(matrix, k+1, axis=1)[:, :k+1]
-    zero_matrix = np.zeros(shape=matrix.shape)
-    for i in range(0, matrix.shape[0]):
-        zero_matrix[i, indexes[i]] = np.ones((1, k+1))
-    zero_matrix -= np.identity(zero_matrix.shape[0])
     return zero_matrix
