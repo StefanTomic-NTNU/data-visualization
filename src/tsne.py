@@ -24,8 +24,14 @@ class TSNE:
 
         Sets the hd_similarity_matrix of self to be the resulting matrix.
         """
-        distance_matrix = u.calculate_euclidean_distances(self.raw)
-        self.hd_similarity_matrix = u.compute_pairwise_similarities(distance_matrix, k)
+        # distance_matrix = u.calculate_euclidean_distances(self.raw)
+        # self.hd_similarity_matrix = u.compute_pairwise_similarities(distance_matrix, k)
+
+        self.hd_similarity_matrix = u.calculate_euclidean_distances(self.raw)
+        self.hd_similarity_matrix = u.reduce_matrix(self.hd_similarity_matrix, k)
+
+        self.hd_similarity_matrix = \
+            (self.hd_similarity_matrix + np.swapaxes(self.hd_similarity_matrix, 0, 1) > 0).astype(float)
 
     def map_data_points(self, max_iteration, alpha, epsilon):
         """ Maps data points. """
