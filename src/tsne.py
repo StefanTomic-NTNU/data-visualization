@@ -42,7 +42,7 @@ class TSNE:
         # u.save_array_to_csv(sampled_two_d_points, "sampled_2d_points")
 
         # Or load previously sampled 2D points for consistency
-        sampled_two_d_points = u.load_csv_to_array("sampled_2d_points")
+        sampled_two_d_points = u.load_csv_to_array("sampled_2d_points.csv")
 
         # Initialize variables
         gain = np.ones((2, self.nr_data_points))        # g in assignment
