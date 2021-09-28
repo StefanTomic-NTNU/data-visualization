@@ -42,7 +42,6 @@ We see that applying PCA to OptDigits yields poor results.
 ![Isomap Swiss Roll](./images/isomap_swiss.PNG)
 We see that the Swiss Roll is reduced to two dimensions such that the roll is 'Rolled out'.
 
-We see 
 ##### OptDigits:
 ![Isomap OptiDigits](./images/isomap_optidigits.PNG)
 We see that applying PCA to OptDigits is better than PCA, but it still fails to distinguish the different clusters. 
